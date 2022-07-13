@@ -1,6 +1,6 @@
 ---
 title: 'Machine Learning - Learning Lab 1 Independent Practice'
-author: ""
+author: "Ya Zhang"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output: html_document
 ---
@@ -25,25 +25,25 @@ Part A:
 
 1.  How good was the machine learning model we developed in the guiding practice? Would you be comfortable using it to code more conversations? What if you read about someone using such a model as a reviewer of research? Please add your thoughts and reflections following the bullet point below.
 
--   
+- It was good. I'll be comfortable using it for more conversations. 
 
 2.  How might the model be improved? Share any ideas you have at this time below:
 
--   
+- Well, the model can be improved in different ways. Increasing data points is always a good way to go. Second, models can be improved through feature engineering. For example, grouping predictors that are highly correlated. Third, handing missing data through certain procedure other than listwise deletion. Fourth, getting rid of outliers. Last but not the least, comparing different algorithms and identify the most efficient one.
 
 Part B: Use the institutional library (e.g. [NCSU Library](https://www.lib.ncsu.edu/#articles)), [Google Scholar](https://scholar.google.com/) or search engine to locate a research article, presentation, or resource that applies machine learning to an educational context aligned with your research interests. More specifically, **locate a machine learning study that involve making predictions**.
 
 1.  Provide an APA citation for your selected study.
 
-    -   
+    - Tan, M., & Shao, P. (2015). Prediction of student dropout in e-Learning program through the use of machine learning method. International journal of emerging technologies in learning, 10(1).
 
 2.  What research questions were the authors of this study trying to address and why did they consider these questions important?
 
-    -   
+    - The researchers examined the prediction of students' dropout using their personal characteristics and academic performance. Because student dropout rate on e-learing environment has been a concern for educators. Identifying factors that predict dropout would help preven that from happening.
 
 3.  What were the results of these analyses?
 
-    -   
+    - The authors compared three predictive models: Artificial Neural Network (ANN), Decision Tree (DT), and Bayesian Networks (BNs). They found that all of the three machine learning models were effective to predict student dropout, among which the DT outperformed the other two. 
 
 ### Part II: Data Product
 
@@ -70,19 +70,19 @@ final_fit$.predictions[[1]] %>%
 
 Please interpret the above confusion matrix using [these guidelines](https://towardsdatascience.com/understanding-confusion-matrix-a9ad42dcfd62) in terms of the true positive, true negative, false positive, and false negative rates. After each of the following (i.e., "True positive"), add both the *number* and percentage of observations. For instance, if there were 100 true positives out of a total of 400 data points, please write: 100 (25%).
 
-**True positive**:
+**True positive**: 52.9%
 
-**True negative**:
+**True negative**: 34.2%
 
-**False positive**:
+**False positive**: 4.9%
 
-**False negative**:
+**False negative**: 8.0%
 
 You can read more about interpreting these [here](https://bradleyboehmke.github.io/HOML/process.html#classification-models) in terms of the specificity, sensitivity, precision, and recall, four statistics based on the information in the confusion matrix.
 
 Return to your answer for Part 1A. Now, having examined the true and false positive and negative rates, how good do you think machine learning model we developed in the case study was? Write more specifically using the evidence you have from creating and interpreting the confusion matrix (above) after the following bullet point.
 
--   
+- Summing up the TP and TN we got the percentage of correctness of 87.1%, which is good. But if the goal is to predict, looking at the TP, 52.9% is relatively low. So we need take a closer look at the model to increase the TP rate. 
 
 ### Knit & Submit
 
