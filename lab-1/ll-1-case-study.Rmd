@@ -1,6 +1,6 @@
 ---
 title: 'Learning Lab 1 Case Study'
-author: ""
+author: "Ya Zhang"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output:
   html_document:
@@ -12,7 +12,6 @@ output:
 editor_options:
   markdown:
     wrap: 72
-bibliography: lit/references.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -100,7 +99,7 @@ Note its dimensions --- especially how many rows it has. Add a few
 dashes after the chunk with your observations.
 
 ```{r}
-
+glimpse(d)
 ```
 
 *Observations*:
@@ -172,7 +171,8 @@ in the larger data. Do that in the chunk below:
 [Your Turn]{style="color: green;"} ⤵
 
 ```{r}
-
+dim(data_train)
+dim(d)
 ```
 
 ## Step 2: Engineer features and write down the recipe
@@ -225,7 +225,7 @@ continuous/numeric outcome:
 my_mod <-
     logistic_reg() %>% 
     set_engine("glm") %>%
-    set_mode("classification")
+    set_mode("classification") 
 ```
 
 ## Step 4: Fit model
@@ -274,6 +274,7 @@ Type `final_fit` below; this is the final, fitted model---one that can
 be interpreted further in the next step!
 
 ```{r}
+final_fit
 ```
 
 You may see a message/warning above or when you examine `final_fit`; you
@@ -325,7 +326,8 @@ Let's interpret the above. If the value of `correct` is `TRUE` when the
 predicted and known code are the same, what does the `percent` column
 tell us? Add one or more notes to the dashes below:
 
--   
+-   number of cases where .pre_class == code is true and false,
+    respectively.
 
 A short-cut to the above is below:
 
@@ -336,9 +338,14 @@ final_fit %>%
 
 **Observations**
 
--   
+-   Accuracy is the percent of correct decision, where .pred_class ==
+    code is true. In this case 87% correctness is pretty good.
 
--   
+-   AUC is the area under the ROC curve, which represents how well the
+    model distinguish the positive cases from negative cases. When AUC
+    is close to 1, the model performs well in distinguishing between
+    positive and negative cases. .93 is a pretty good AUC value. The
+    model accuracy is good.
 
 That's it for now; the core parts of machine learning are used in the
 above steps you took; what we'll do after this leaning lab only adds
