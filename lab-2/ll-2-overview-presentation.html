@@ -4,7 +4,7 @@
     <title>Machine Learning Learning Lab 2: Feature Engineering</title>
     <meta charset="utf-8" />
     <meta name="author" content="Dr. Joshua Rosenberg" />
-    <meta name="date" content="2022-07-12" />
+    <meta name="date" content="2022-07-14" />
     <script src="libs/header-attrs-2.14/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
@@ -38,7 +38,7 @@ class: clear, title-slide, inverse, center, top, middle
 # Machine Learning Learning Lab 2: Feature Engineering
 ----
 ### **Dr. Joshua Rosenberg**
-### July 12, 2022
+### July 14, 2022
 
 ---
 
@@ -87,7 +87,7 @@ class: clear, inverse, center, middle
 
 
 ```
-## # A tibble: 10 × 3
+## # A tibble: 10 x 3
 ##    student_id time_point var_a
 ##    &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt;
 ##  1 janyia              1  0.01
@@ -143,7 +143,7 @@ Here's a time stamp:
 
 
 ```
-## [1] "2022-07-12 09:27:51 EDT"
+## [1] "2022-07-14 10:16:06 EDT"
 ```
 
 **How could this variable be used as a predictor variable?**
@@ -162,9 +162,7 @@ Here's a time stamp:
 
 .pull-right[
 
-&lt;img src="img/joro-cycle.jpeg" width="75%" /&gt;
-
-]
+&lt;img src="img/joro-pointing.jpeg" width="75%" /&gt;
 
 ---
 
@@ -263,7 +261,7 @@ We'd need to use the same training data to tune a new model---and the same testi
 
 - How many sets (samples taken through resampling)?
     - This is determined by _k_, number of times the data is resampled
-    - When _k_ is equivalent to the number of rows in the data, this is often called "Leave One Out Cross-Validation" (LOOCV)
+    - When _k_ is equivalent to the number of rows in the data, this is often called "Leave One Out Cross-Validation" (LOOCV). For smaller sample size, i.e., 500, 800. may set k=number of rows.
 ---
 
 # Let's consider an example
@@ -274,20 +272,20 @@ Say we have a data set, `d`, with 100 observations (rows or data points) with _k
 
 
 ```
-## # A tibble: 100 × 3
+## # A tibble: 100 x 3
 ##       id  var_a  var_b
 ##    &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-##  1     1 0.375  0.0263
-##  2     2 0.156  0.267 
-##  3     3 0.204  0.172 
-##  4     4 0.104  0.238 
-##  5     5 0.0806 0.760 
-##  6     6 0.539  0.426 
-##  7     7 0.701  0.985 
-##  8     8 0.237  0.406 
-##  9     9 0.216  0.159 
-## 10    10 0.865  0.0728
-## # … with 90 more rows
+##  1     1 0.113  0.617 
+##  2     2 0.0943 0.115 
+##  3     3 0.625  0.193 
+##  4     4 0.143  0.497 
+##  5     5 0.992  0.698 
+##  6     6 0.245  0.0131
+##  7     7 0.465  0.213 
+##  8     8 0.670  0.810 
+##  9     9 0.800  0.561 
+## 10    10 0.363  0.163 
+## # ... with 90 more rows
 ```
 
 **Using _k_ = 10, how can we split this data into ten distinct training and testing sets?**
@@ -298,21 +296,21 @@ Say we have a data set, `d`, with 100 observations (rows or data points) with _k
 
 
 ```
-## # A tibble: 3 × 3
-##      id var_a  var_b
-##   &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
-## 1     1 0.375 0.0263
-## 2     2 0.156 0.267 
-## 3     3 0.204 0.172
+## # A tibble: 3 x 3
+##      id  var_a var_b
+##   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1     1 0.113  0.617
+## 2     2 0.0943 0.115
+## 3     3 0.625  0.193
 ```
 
 ```
-## # A tibble: 3 × 3
-##      id var_a var_b
-##   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1    91 0.538 0.226
-## 2    92 0.839 0.862
-## 3    93 0.396 0.295
+## # A tibble: 3 x 3
+##      id  var_a var_b
+##   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1    91 0.0342 0.446
+## 2    92 0.0377 0.569
+## 3    93 0.271  0.795
 ```
 
 ---
@@ -321,21 +319,21 @@ Say we have a data set, `d`, with 100 observations (rows or data points) with _k
 
 
 ```
-## # A tibble: 3 × 3
-##      id var_a  var_b
-##   &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
-## 1     1 0.375 0.0263
-## 2     2 0.156 0.267 
-## 3     3 0.204 0.172
+## # A tibble: 3 x 3
+##      id  var_a var_b
+##   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1     1 0.113  0.617
+## 2     2 0.0943 0.115
+## 3     3 0.625  0.193
 ```
 
 ```
-## # A tibble: 3 × 3
+## # A tibble: 3 x 3
 ##      id var_a var_b
 ##   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1    81 0.491 0.455
-## 2    82 0.299 0.601
-## 3    83 0.818 0.702
+## 1    81 0.513 0.775
+## 2    82 0.562 0.151
+## 3    83 0.252 0.347
 ```
 
 ---
@@ -344,21 +342,21 @@ Say we have a data set, `d`, with 100 observations (rows or data points) with _k
 
 
 ```
-## # A tibble: 3 × 3
-##      id var_a  var_b
-##   &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
-## 1     1 0.375 0.0263
-## 2     2 0.156 0.267 
-## 3     3 0.204 0.172
+## # A tibble: 3 x 3
+##      id  var_a var_b
+##   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1     1 0.113  0.617
+## 2     2 0.0943 0.115
+## 3     3 0.625  0.193
 ```
 
 ```
-## # A tibble: 3 × 3
-##      id var_a  var_b
-##   &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
-## 1    71 0.441 0.0448
-## 2    72 0.929 0.266 
-## 3    73 0.402 0.381
+## # A tibble: 3 x 3
+##      id var_a var_b
+##   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1    71 0.742 0.434
+## 2    72 0.262 0.425
+## 3    73 0.270 0.417
 ```
 
 ... through the tenth resampling, after which the fit measures are simply summed
@@ -439,21 +437,21 @@ This data is described further (and descriptively and inferentially analyzed usi
 ```
 ## Rows: 546
 ## Columns: 15
-## $ student_id           &lt;dbl&gt; 60186, 66693, 66811, 70532, 77010, 85249, 85411, …
-## $ course_id            &lt;chr&gt; "AnPhA-S116-01", "AnPhA-S116-01", "AnPhA-S116-01"…
-## $ gender               &lt;chr&gt; "M", "M", "F", "F", "F", "F", "F", "F", "F", "F",…
-## $ enrollment_reason    &lt;chr&gt; "Course Unavailable at Local School", "Course Una…
-## $ enrollment_status    &lt;chr&gt; "Approved/Enrolled", "Approved/Enrolled", "Approv…
-## $ final_grade          &lt;dbl&gt; 86.27200, 93.75360, 91.20160, 93.64000, 73.17067,…
-## $ subject              &lt;chr&gt; "AnPhA", "AnPhA", "AnPhA", "AnPhA", "AnPhA", "AnP…
-## $ semester             &lt;chr&gt; "S116", "S116", "S116", "S116", "S116", "S116", "…
-## $ section              &lt;chr&gt; "01", "01", "01", "01", "01", "01", "01", "01", "…
-## $ int                  &lt;dbl&gt; 4.2, 5.0, 4.0, 4.6, NA, 4.0, 4.4, 5.0, 5.0, 4.2, …
-## $ uv                   &lt;dbl&gt; 4.333333, 5.000000, 4.000000, 4.666667, 3.666667,…
-## $ percomp              &lt;dbl&gt; 4.5, 5.0, NA, 4.0, 3.5, 4.5, 3.5, 3.5, 4.0, 3.5, …
-## $ percentage_earned    &lt;dbl&gt; 0.9602941, 0.9764706, 0.9452353, 0.9485294, 0.737…
-## $ sum_discussion_posts &lt;dbl&gt; 9, 6, 9, 11, 9, 9, 12, 8, 7, 9, 9, 9, NA, 12, 9, …
-## $ sum_n_words          &lt;dbl&gt; 939, 311, 474, 578, 496, 284, 452, 382, 138, 239,…
+## $ student_id           &lt;dbl&gt; 60186, 66693, 66811, 70532, 77010, 85249, 85411, ~
+## $ course_id            &lt;chr&gt; "AnPhA-S116-01", "AnPhA-S116-01", "AnPhA-S116-01"~
+## $ gender               &lt;chr&gt; "M", "M", "F", "F", "F", "F", "F", "F", "F", "F",~
+## $ enrollment_reason    &lt;chr&gt; "Course Unavailable at Local School", "Course Una~
+## $ enrollment_status    &lt;chr&gt; "Approved/Enrolled", "Approved/Enrolled", "Approv~
+## $ final_grade          &lt;dbl&gt; 86.27200, 93.75360, 91.20160, 93.64000, 73.17067,~
+## $ subject              &lt;chr&gt; "AnPhA", "AnPhA", "AnPhA", "AnPhA", "AnPhA", "AnP~
+## $ semester             &lt;chr&gt; "S116", "S116", "S116", "S116", "S116", "S116", "~
+## $ section              &lt;chr&gt; "01", "01", "01", "01", "01", "01", "01", "01", "~
+## $ int                  &lt;dbl&gt; 4.2, 5.0, 4.0, 4.6, NA, 4.0, 4.4, 5.0, 5.0, 4.2, ~
+## $ uv                   &lt;dbl&gt; 4.333333, 5.000000, 4.000000, 4.666667, 3.666667,~
+## $ percomp              &lt;dbl&gt; 4.5, 5.0, NA, 4.0, 3.5, 4.5, 3.5, 3.5, 4.0, 3.5, ~
+## $ percentage_earned    &lt;dbl&gt; 0.9602941, 0.9764706, 0.9452353, 0.9485294, 0.737~
+## $ sum_discussion_posts &lt;dbl&gt; 9, 6, 9, 11, 9, 9, 12, 8, 7, 9, 9, 9, NA, 12, 9, ~
+## $ sum_n_words          &lt;dbl&gt; 939, 311, 474, 578, 496, 284, 452, 382, 138, 239,~
 ```
 
 ---

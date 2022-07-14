@@ -276,7 +276,7 @@ We'd need to use the same training data to tune a new model---and the same testi
 
 - How many sets (samples taken through resampling)?
     - This is determined by _k_, number of times the data is resampled
-    - When _k_ is equivalent to the number of rows in the data, this is often called "Leave One Out Cross-Validation" (LOOCV)
+    - When _k_ is equivalent to the number of rows in the data, this is often called "Leave One Out Cross-Validation" (LOOCV). For smaller sample size, i.e., 500, 800. may set k=number of rows.
 ---
 
 # Let's consider an example

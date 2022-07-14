@@ -1,6 +1,6 @@
 ---
 title: 'Machine Learning - Learning Lab 2 Badge'
-author: ""
+author: "Ya Zhang"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output: html_document
 ---
@@ -23,29 +23,29 @@ Part A:
 
 1.  Like we considered after LL1, how good was the machine learning model we developed in the case study? Stepping back, how successful is this as a predictive model of students' success in the class using data collected through roughly the first one month of the class? How might this model be used in practice?
 
--   
+-   I used k=10. The average rmse I had is 9.28, and the r square I had is .80. I don't think this is an ideal model. R square value is good, whereas the value of rmse is too high, meaning the model didn't capture the noise well.
 
 3.  Would you be comfortable using this? What if you read about someone using such a model as a reviewer of research. Please add your thoughts and reflections following the bullet point below.
 
--   
+-   Well, I'd definitely try to reduce the rmse value.
 
 3.  How might the model be improved? Share any ideas you have at this time below:
 
--   
+-   I'd like to add more features into the model. I may also want to do some model comparison and add other model fit indicators besides rmse and r square.
 
 Part B: Again, use the institutional library (e.g. [NCSU Library](https://www.lib.ncsu.edu/#articles)), [Google Scholar](https://scholar.google.com/) or search engine to locate a research article, presentation, or resource that applies machine learning to an educational context aligned with your research interests. More specifically, **locate a machine learning study that involve making predictions -- and, ideally, one that involved in some way engineering features from data**.
 
 1.  Provide an APA citation for your selected study.
 
-    -   
+    -   Aulck, L., Velagapudi, N., Blumenstock, J., & West, J. (2016). Predicting student dropout in higher education. arXiv preprint arXiv:1606.06364.
 
 2.  What research questions were the authors of this study trying to address and why did they consider these questions important?
 
-    -   
+    -   What factors contribute to the prediction of freshman returning to college the 2nd year. There was some statistic saying that roughly 30% of students returning to the university after the 1st year. Predicting freshman dropout would help improve college rentention.
 
 3.  What were the results of these analyses?
 
-    -   
+    -   The study identified several indicators for early attrition such as GPA, students' previous schooling, birth year, etc. The results highlighted the potential for machine learning to have an impact on student retention and success.
 
 ### Part II: Data Product
 
@@ -59,35 +59,60 @@ library(here)
 library(tidymodels)
 
 d <- read_csv("data/online-sci-data-joined.csv")
+data_with_final_grade <- read_csv("data/data-to-model-no-gradebook.csv")
 
+data_with_final_grade <- data_with_final_grade %>%
+    select(student_id, course_id, final_grade)
+
+d <- left_join(d, data_with_final_grade, by = c("student_id", "course_id"))
+glimpse(d)
+
+d %>% view()
+names(d)
+
+d <- d%>% distinct(student_id, course_id, .keep_all = TRUE)
+
+glimpse(d)
+```
+
+split data.
+
+```{r}
 set.seed(20220712)
 
 train_test_split <- initial_split(d, prop = .80)
 
 data_train <- training(train_test_split)
 
-kfcv <- vfold_cv(data_train, v = 20) # this differentiates this from what we did before
+kfcv <- vfold_cv(data_train, v = 10) # this differentiates this from what we did before
+glimpse(kfcv)
 
 ```
 
 Here's where you can add a new feature engineering step. For the sake of this badge, choose from among those options here: <https://recipes.tidymodels.org/reference/index.html>. You can see more - if helpful - here: <https://www.tmwr.org/recipes.html>
 
 ```{r}
-my_rec <- recipe(passing_grade ~ ., data = d) %>% 
+names(data_train)
+
+my_rec <- recipe(final_grade ~ int + uv + tv + student_id + course_id + sum_discussion_posts +
+                     sum_n_words + gender, data = data_train) %>% 
+    update_role(student_id, course_id, new_role = "ID variabe") %>% #this can be any string
     step_normalize(all_numeric_predictors()) %>% # standardizes numeric variables
     step_nzv(all_predictors()) %>% # remove predictors with a "near-zero variance"
     step_novel(all_nominal_predictors()) %>% # add a musing label for factors
     step_dummy(all_nominal_predictors()) %>%  # dummy code all factor variables
     step_impute_knn(all_predictors()) # impute missing data for all predictor variables
+my_rec
+
 ```
 
 Run the remaining steps.
 
 ```{r}
 my_mod <-
-    logistic_reg() %>% 
-    set_engine("glm") %>%
-    set_mode("classification")
+    linear_reg() %>% 
+    set_engine("lm") %>%
+    set_mode("regression")
 
 my_wf <-
     workflow() %>%
@@ -96,10 +121,16 @@ my_wf <-
 
 fitted_model <- fit_resamples(my_wf, resamples = kfcv,
                               control = control_grid(save_pred = TRUE)) # this allows us to inspect the predictions
+```
 
+check model fit
+
+```{r}
 fitted_model %>% 
     unnest(.metrics) %>% 
     filter(.metric == "accuracy") # we also get another metric, the ROC; we focus just on accuracy for now
+fitted_model %>%
+    collect_metrics()
 ```
 
 Did that feature engineering make any difference compared to the mean predictive accuracy you found in the case study? Add a few notes below:
