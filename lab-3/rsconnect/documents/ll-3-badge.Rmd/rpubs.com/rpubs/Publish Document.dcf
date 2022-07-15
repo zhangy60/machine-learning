@@ -1,0 +1,11 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/924361/960d1dfa486642928d16ee4123a3f010
+bundleId: https://api.rpubs.com/api/v1/document/924361/960d1dfa486642928d16ee4123a3f010
+url: http://rpubs.com/zhangy60/924361
+when: 1657908049.50142
+lastSyncTime: 1657908049.50144
