@@ -1,6 +1,6 @@
 ---
 title: 'Learning Lab 3 Case Study'
-author: ""
+author: "Ya Zhang"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output:
   html_document:
@@ -16,7 +16,7 @@ bibliography: lit/references.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE) #echo is to show the code, eval is to run the codes, when changed to false, it won't run the codes. Can set the chunk argument. By default, it's true. Can set cache and warning equal to true too.
 ```
 
 Even after feature engineering, machine learning approaches can often
@@ -61,6 +61,8 @@ Please add to the chunk below code to load three packages we've used in
 both LL1 and LL2 - tidyverse, tidymodels, and here.
 
 ```{r}
+library(tidymodels)
+library(tidyverse)
 library(vip) # a new package we're adding for variable importance measures
 library(ranger) # this is needed for the random forest algorithm
 ```
@@ -99,8 +101,9 @@ include features relating to the text data*, but think this could be a
 great direction for future work (and research) in this area.
 
 ```{r}
+getwd()
 d <- read_csv("data/ngsschat-processed-data.csv")
-
+# d <- read_csv("data/ngsschat-processed-data-add-three-features.csv")
 d <- d %>% 
     mutate(code = as.factor(code)) # this is needed for the classification mode
 ```
@@ -124,7 +127,7 @@ set.seed(20220712)
 train_test_split <- initial_split(d, prop = .80)
 data_train <- training(train_test_split)
 
-<replace this line with your kfcv code!>
+kfcv <- vfold_cv(data_train, v=4)
 ```
 
 ## Step 2: Engineer features
@@ -168,7 +171,8 @@ here.
 # specify model
 my_mod <-
     rand_forest(mtry = tune(),
-                min_n = tune()) %>%
+                min_n = tune(),
+                trees = tune()) %>%
     set_engine("ranger", importance = "impurity") %>%
     set_mode("classification")
 
@@ -198,6 +202,7 @@ values of the variables in the data.
 ```{r panel-chunk-4, echo = TRUE, eval = FALSE}
 finalize(mtry(), data_train)
 finalize(min_n(), data_train)
+finalize(trees(), data_train)
 ```
 
 #### [Your Turn]{style="color: green;"} ⤵
@@ -210,6 +215,7 @@ simply a combination of values of the hyperparameters.
 ```{r}
 tree_grid <- grid_max_entropy(mtry(range(1, 8)),
                               min_n(range(2, 40)),
+                              trees(range(1, 600)),
                               size = 10)
 
 tree_grid
@@ -247,6 +253,7 @@ literally the first row.
 # select best set of tuning parameters
 best_tree <- fitted_model %>%
     select_best(metric = "accuracy")
+best_tree
 ```
 
 Next, we'll finalize workflow with best set of tuning parameters and
@@ -258,6 +265,7 @@ final_wf <- my_wf %>%
 
 final_fit <- final_wf %>% 
     last_fit(train_test_split, metrics = metric_set(roc_auc, accuracy, kap, sensitivity, specificity, precision))
+
 ```
 
 We can see that `final_fit` is for a single fit: a random forest with

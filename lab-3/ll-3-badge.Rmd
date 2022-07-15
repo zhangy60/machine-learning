@@ -1,6 +1,6 @@
 ---
 title: 'Machine Learning - Learning Lab 4 Badge'
-author: ""
+author: "Ya Zhang"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output: html_document
 ---
@@ -23,25 +23,25 @@ Part A:
 
 1.  Like after each of the previous two learning labs, please interpret the predictive accuracy of the model. How much better was it relative to the untuned model? Was tuning worth the investment.
 
--   
+-   Before the tuning, the accuracy value is about 80%, and it was boostered to 88% after tuning. Tuning seems to work well and defnitely worth the investment.
 
 2.  Please interpret the fit metrics other than accuracy. What do the Kappa, sensitivity, specificity, and AOC tell us about the predictive accuracy of the model?
 
--   
+-   Kappa is a measure of classification accuracy. Kappa = (observed accuracy - expected accuracy)/(1 - expected accuracy)
 
 Part B: Once again, use the institutional library (e.g. [NCSU Library](https://www.lib.ncsu.edu/#articles)), [Google Scholar](https://scholar.google.com/) or search engine to locate a research article, presentation, or resource that applies machine learning to an educational context aligned with your research interests. More specifically, **locate a machine learning study that involve making predictions -- and, ideally, one that utilizes a random forest**.
 
 1.  Provide an APA citation for your selected study.
 
-    -   
+    -   Tarik, A., Aissa, H., & Yousef, F. (2021). Artificial intelligence and machine learning to predict student performance during the COVID-19. Procedia Computer Science, 184, 835-840.
 
 2.  What research questions were the authors of this study trying to address and why did they consider these questions important?
 
-    -   
+    -   The authors were interested in the prediciton of the performance of Moroccan students using an intelligent system through three methods: linear regression, decision tree, and random forest.
 
 3.  What were the results of these analyses?
 
-    -   
+    -   The random forest algorithm was found to give the best predictions than the two other algorithms tested.
 
 ### Part II: Data Product
 
@@ -61,21 +61,21 @@ library(tidymodels)
 library(here)
 library(vip) # a new package we're adding for variable importance measures
 
-d <- read_csv(here("data", "ngsschat-processed-data.csv"))
+d <- read_csv("data/ngsschat-processed-data.csv")
 ```
 
 **Split data**
 
-```{r panel-chunk-1, echo = TRUE, eval = FALSE}
+```{r panel-chunk-2, echo = TRUE, eval = FALSE}
 train_test_split <- initial_split(d, prop = .80)
 data_train <- training(train_test_split)
 
-kfcv <- vfold_cv(data_train) # again, we will use resampling
+kfcv <- vfold_cv(data_train, k=5) # again, we will use resampling
 ```
 
 **Engineer features**
 
-```{r panel-chunk-2, echo = TRUE, eval = FALSE}
+```{r panel-chunk-3, echo = TRUE, eval = FALSE}
 my_rec <- recipe(code ~ ., data = data_train) %>% 
     step_normalize(all_numeric_predictors()) %>%
     step_nzv(all_predictors())
@@ -83,13 +83,14 @@ my_rec <- recipe(code ~ ., data = data_train) %>%
 
 **Specify recipe, model, and workflow**
 
-```{r panel-chunk-3, echo = TRUE, eval = FALSE}
+```{r panel-chunk-4, echo = TRUE, eval = FALSE}
 # specify model
 my_mod <-
     rand_forest(mtry = tune(), # this specifies that we'll take steps later to tune the model
-                min_n = tune()) %>%
+                min_n = tune(),
+                trees = tune()) %>%
     set_engine("ranger", importance = "impurity") %>%
-    set_mode("regression")
+    set_mode("classification")
 
 # specify workflow
 my_wf <-
@@ -100,26 +101,31 @@ my_wf <-
 
 **Fit model**
 
-```{r panel-chunk-4, echo = TRUE, eval = FALSE}
+```{r panel-chunk-5, echo = TRUE, eval = FALSE}
 # specify tuning grid
 finalize(mtry(), data_train)
 finalize(min_n(), data_train)
+finalize(trees(), data_train)
 
-tree_grid <- grid_max_entropy(mtry(range(1, 18)),
+tree_grid <- grid_max_entropy(mtry(range(1, 8)),
                               min_n(range(2, 40)),
+                              trees(range(1, 600)),
                               size = 10)
+
+tree_grid
 
 # fit model with tune_grid
 fitted_model <- my_wf %>% 
     tune_grid(
         resamples = kfcv,
         grid = tree_grid,
-        metrics = metric_set((roc_auc, accuracy, kap, sensitivity, specificity, precision))
+        metrics = metric_set(roc_auc, accuracy, kap, sensitivity, specificity, precision)
+    )
 ```
 
 **Fit model (part 2)**
 
-```{r panel-chunk-4b, echo = TRUE, eval = FALSE}
+```{r panel-chunk-5b, echo = TRUE, eval = FALSE}
 # examine best set of tuning parameters; repeat?
 show_best(fitted_model, n = 10, metric = "accuracy")
 
@@ -136,7 +142,7 @@ final_fit <- final_wf %>%
 
 **Evaluate accuracy**
 
-```{r panel-chunk-5, echo = TRUE, eval = FALSE}
+```{r panel-chunk-6, echo = TRUE, eval = FALSE}
 # fit stats
 final_fit %>%
     collect_metrics()
