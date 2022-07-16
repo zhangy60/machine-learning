@@ -1,6 +1,6 @@
 ---
 title: 'Machine Learning - Learning Lab 4 Badge'
-author: ""
+author: "Ya Zhang"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output: html_document
 ---
@@ -24,25 +24,26 @@ Part A:
 
 1.  How interpretable or useful is the solution we estimated in the case study? 
 
--   
+-   I selected 3 variables to run the case study (ave_carelessness_scaled, ave_res_bored_scaled, ave_correct_scaled). I found the results to be interpretatble as when I looked at the patterns of the four group on these three variables, I was able to group their patterns and make sense of the results. I think for the next step I'd do some hypothesis testing to check the differences among these profiles.
 
 2.  How might a qualitative analysis follow from the Latent Profile Analysis we carried out? What steps could you take in a qualitative investigation? Feel free to think broadly and creatively here!
 
--   
+-   There're different ways to do the qualitative analysis afterwards. For the simplest way I'd plot the counts of the profiles. In addition to the qualitative analysis, I think inferential statistics can be run to check the significant difference between the profiles. I'll definitely be interested in going beyond the qualitative analysis.  
 
 Part B: Once again, use the institutional library (e.g. [NCSU Library](https://www.lib.ncsu.edu/#articles)), [Google Scholar](https://scholar.google.com/) or search engine to locate a research article, presentation, or resource that applies unsupervised machine learning to an educational context aligned with your research interests. More specifically, **locate a machine learning study that involve using Latent Profile Analysis or a similar method**. You may find the published papers that have used LPA helpful in this respect; those can be browsed [here](https://scholar.google.com/scholar?hl=en&as_sdt=0%2C34&q=tidylpa&btnG=). 
 
 1.  Provide an APA citation for your selected study.
 
-    -   
+    -   van Alten, D. C., Phielix, C., Janssen, J., & Kester, L. (2021). Secondary students’ online self-regulated learning during flipped learning: A latent profile analysis. Computers in Human Behavior, 118, 106676.
 
 2.  What research questions were the authors of this study trying to address and why did they consider these questions important?
 
-    -   
+    -   Whether the differences in students' self-regulated learning (SRL) skills should form the basis for tailoring SRL support in online learning environments?
+        Whether students' SRL activity profile membership can be explained by their characteristics (i.e., self-reported SRL, motivation, and prior knowledge)?
 
 3.  What were the results of these analyses?
 
-    -   
+    -   Five distinct SRL profiles from low completion and no activity to full completion and very high activity. In addition, students in the profile who showed low SRL activity achieved significantly worse learning outcomes than students in the three profiles with higher SRL activity. However, none of the student level variable was found to predict their profile membership.
 
 ### Part II: Data Product
 
@@ -85,7 +86,7 @@ plot_profiles(our_solution, add_line = TRUE) +
 
 Please interpret the results of your analysis below. What did you find? How interpretable and useful are the profiles? And, what next steps - including those involving qualitative analysis - might you take to deepen this analysis?
 
--   
+-   Four profiles seem to be the optimal solution to the dataset. I found it a little tricky to label these profiles though, which is common. The more variables there are, the harder to label them. Another observation I had was that there's one variable (average_frust_scaled) which couldn't distinguish among the four profiles well. I may want to get rid of that variable. The idea is to form as unique profiles as possible. As for the next steps, I'll check the frequency and then run ANOVA to examine the degree of differences among these profiles.
 
 ### Knit & Submit
 

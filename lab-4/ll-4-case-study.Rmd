@@ -1,6 +1,6 @@
 ---
 title: 'Learning Lab 4 Case Study'
-author: ""
+author: "Ya Zhang"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output:
   html_document:
@@ -67,13 +67,16 @@ First, let's load the packages we'll use---the familiar {tidyverse} and
 the {tidyLPA package}.
 
 ```{r}
+#install.packages("tidyLPA")
 library(tidyverse)
 library(tidyLPA)
+library(dplyr)
 ```
 
 Next, let's load the data.
 
 ```{r}
+getwd()
 d <- read_csv("data/dat_csv_combine_final_full.csv")
 ```
 
@@ -95,7 +98,9 @@ We *could* estimate a single solution, as in the following (run this
 code).
 
 ```{r}
+names(d)
 d %>%
+    select(ave_carelessness, ave_res_bored, ave_correct) %>%
     estimate_profiles(3) %>% 
     plot_profiles()
 ```
@@ -131,7 +136,9 @@ d <- d %>%
 ## Step 2: Select a solution
 
 ```{r}
+names(d)
 d %>%
+    select(ave_carelessness_scaled, ave_res_bored_scaled, ave_correct_scaled) %>%
     estimate_profiles(3) %>% 
     plot_profiles()
 ```
@@ -146,6 +153,7 @@ set of profiles at once --- here, those with 1 through 10 profiles.
 
 ```{r}
 d %>%
+    select(ave_carelessness_scaled, ave_res_bored_scaled, ave_correct_scaled) %>%
     estimate_profiles(1:10) %>% 
     compare_solutions()
 ```
@@ -161,6 +169,7 @@ Let's interrogate that fourth solution next.
 
 ```{r}
 our_solution <- d %>%
+    select(ave_carelessness_scaled, ave_res_bored_scaled, ave_correct_scaled) %>%
     estimate_profiles(4)
 
 plot_profiles(our_solution, add_line = TRUE) +
